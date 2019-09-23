@@ -1,0 +1,23 @@
+<Project>
+
+  <Target Name="EnsureNodeModulesInstalled"
+          AfterTargets="PostBuildEvent"
+          Inputs="yarn.lock;package.json"
+          Outputs="node_modules/.yarn-integrity">
+
+    <Yarn Command="install" />
+    <Yarn Command="run eslint --config ClientApp/.eslintrc.js ClientApp/**" />
+    <Yarn Command="run webpack --config webpack.config.js" />
+  </Target>
+
+  <Target Name="PublishWebpack"
+          BeforeTargets="Publish">
+
+    <ConvertToAbsolutePath Paths="$(PublishDir)">
+      <Output TaskParameter="AbsolutePaths" PropertyName="AbsPublishDir" />
+    </ConvertToAbsolutePath>
+
+    <Yarn Command="run webpack --env.prod --env.publishDir=$(AbsPublishDir)" />
+  </Target>
+
+</Project>

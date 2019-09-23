@@ -1,0 +1,6 @@
+node_modules
+.awcache
+obj
+bin
+wwwroot
+yarn-error.log

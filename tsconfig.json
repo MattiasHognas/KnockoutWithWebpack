@@ -1,0 +1,17 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": false,
+        "module": "es6",
+        "target": "es6",
+        "noImplicitAny": true,
+        // "jsx": "react",
+        "outDir": "wwwroot/dist",
+        "moduleResolution": "node",
+        "incremental": true,
+        "experimentalDecorators": true
+        // "declaration": true,
+        // "declarationDir": "types"
+    }
+}
