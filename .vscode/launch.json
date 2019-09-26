@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.2/Test.dll",
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.2/Lab.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,

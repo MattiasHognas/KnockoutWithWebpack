@@ -1,9 +1,9 @@
-import Shared from "./Shared";
+import ko, { Observable } from "knockout";
+import { TestC } from "./TestC";
 
 export abstract class TestABase {
-    public X: string;
+    public TestAInstanceProp: Observable<TestC> = ko.observable<TestC>();
     constructor(x: string) {
-        this.X = `TestABase.X : ${x}`;
-        new Shared(this.X);
+        this.TestAInstanceProp(new TestC(x));
     }
 }

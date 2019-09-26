@@ -1,0 +1,17 @@
+@await Html.PartialAsync("_TestTemplate")
+
+<div id="test-root" data-bind="template: { name: 'test-template', data: TestBInstanceProp }">
+</div>
+
+@section Scripts {
+    <script src="~/dist/runtime.js" asp-append-version="true"></script>
+    <script src="~/dist/vendor.webpack.js" asp-append-version="true"></script>
+    <script src="~/dist/vendor.knockout.js" asp-append-version="true"></script>
+    <script src="~/dist/common.js" asp-append-version="true"></script>
+    <script src="~/dist/TestB.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+    (function() {
+        ko.applyBindings(new TestB.default(), document.getElementById("test-root"));
+    })()
+    </script>
+}

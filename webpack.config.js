@@ -1,6 +1,4 @@
 const { join } = require("path");
-const webpack = require("webpack");
-// const { CheckerPlugin } = require("awesome-typescript-loader");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = (env) => {
@@ -10,7 +8,7 @@ module.exports = (env) => {
         ? env.publishDir
         : __dirname;
 
-    return [{
+    return {
         mode: isDevBuild ? "development" : "production",
 
         devtool: "source-map",
@@ -22,7 +20,6 @@ module.exports = (env) => {
         },
 
         entry: {
-            // "App": "./ClientApp/App.tsx",
             "TestA": "./ClientApp/TestA.ts",
             "TestB": "./ClientApp/TestB.ts"
         },
@@ -38,19 +35,13 @@ module.exports = (env) => {
             libraryTarget: 'umd',
             library: '[name]',
             umdNamedDefine: true,
-            globalObject: 'window'
-            // library: 'app',
-            // libraryTarget: 'var'
+            globalObject: 'window',
+            pathinfo: false
         },
 
         resolve: {
-            // Add ".ts" and ".tsx" as resolvable extensions.
             extensions: [".ts", ".tsx", ".js", ".json"],
             modules: ["node_modules"]
-        },
-
-        devServer: {
-             hot: true
         },
 
         module: {
@@ -64,28 +55,27 @@ module.exports = (env) => {
                         }
                     ]
                 },
-                // All files with a ".ts" or ".tsx" extension will be handled by "awesome-typescript-loader".
+                {
+                    test: require.resolve('knockout'),
+                    use: [
+                        {
+                            loader: 'expose-loader',
+                            options: 'ko'
+                        }
+                    ]
+                },
                 {
                     test: /\.tsx?$/,
                     include: /ClientApp/,
                     use: [
                         {
-                            loader: "ts-loader"
+                            loader: "ts-loader",
+                            options: {
+                                transpileOnly: true,
+                                experimentalWatchApi: true
+                            }
                         }
                     ]
-                    // loader: [
-                    //     {
-                    //         loader: "awesome-typescript-loader",
-                    //         options: {
-                    //             useCache: true,
-                    //             useBabel: true,
-                    //             babelOptions: {
-                    //                 babelrc: false,
-                    //                 // plugins: ["react-hot-loader/babel"],
-                    //             }
-                    //         }
-                    //     }
-                    // ]
                 },
                 {
                     enforce: "pre",
@@ -95,9 +85,10 @@ module.exports = (env) => {
             ]
         },
         optimization: {
-            runtimeChunk: "single",
+            runtimeChunk: 'single',
             splitChunks: {
-                chunks: "all",
+                chunks: 'all',
+                maxInitialRequests: Infinity,
                 minSize: 0,
                 cacheGroups: {
                     default: {
@@ -106,27 +97,18 @@ module.exports = (env) => {
                         priority: -20,
                         reuseExistingChunk: true
                     },
-                    vendors: {
+                    vendor: {
                         test: /[\\/]node_modules[\\/]/,
-                        name: 'vendor',
-                        chunks: 'all',
-                        minChunks: 2
+                        name(module) {
+                            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+                            return `vendor.${packageName.replace('@', '')}`;
+                        }
                     }
                 }
             }
         },
-        // externals: {
-        //     "react": "React",
-        //     "react-dom": "ReactDOM"
-        // },
         plugins: [
-            // new webpack.ProvidePlugin({
-            //     $: 'jquery',
-            //     jQuery: 'jquery',
-            //     'window.jQuery': 'jquery'
-            // }),
-            new CleanWebpackPlugin({ cleanOnceBeforeBuildPatterns: [join(outputDir, "wwwroot", "dist")] }),
-            // new CheckerPlugin()
+            new CleanWebpackPlugin({ cleanOnceBeforeBuildPatterns: [join(outputDir, "wwwroot", "dist")] })
         ]
-    }];
+    };
 };

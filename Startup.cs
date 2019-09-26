@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace WebApplication1
+namespace Lab
 {
     public class Startup
     {
@@ -19,7 +19,7 @@ namespace WebApplication1
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
-                    HotModuleReplacement = true,
+                    HotModuleReplacement = false,
                     ConfigFile = "webpack.config.js"
                 });
             }
