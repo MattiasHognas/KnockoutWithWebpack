@@ -1,6 +1,7 @@
-const { join } = require("path");
+const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const FilewatcherPlugin = require("filewatcher-webpack-plugin");
 
 module.exports = (env) => {
     const isDevBuild = !(env && env.prod);
@@ -32,7 +33,7 @@ module.exports = (env) => {
         output: {
             filename: "dist/[name].js",
             publicPath: "/",
-            path: join(outputDir, "wwwroot"),
+            path: path.join(outputDir, "wwwroot"),
             libraryTarget: "umd",
             library: "[name]",
             umdNamedDefine: true,
@@ -41,12 +42,25 @@ module.exports = (env) => {
         },
 
         resolve: {
-            extensions: [".ts", ".tsx", ".js", ".json"],
+            extensions: [".ts", ".tsx", ".js", ".json", ".resx"],
             modules: ["node_modules"]
         },
 
         module: {
             rules: [
+                {
+                    test: [/\.resx$/],
+                    use: [
+                        {
+                            loader: path.resolve("./chinsay-resx2ts-loader.js"),
+                            options: {
+                                typeScriptResourcesNamespace: "test",
+                                virtualResxFolder: "Resources",
+                                virtualTypeScriptFolder: "ClientApp/Resources"
+                            }
+                        }
+                    ]
+                },
                 {
                     test: require.resolve("jquery"),
                     use: [
@@ -121,7 +135,8 @@ module.exports = (env) => {
             }
         },
         plugins: [
-            new CleanWebpackPlugin({ cleanOnceBeforeBuildPatterns: [join(outputDir, "wwwroot", "dist")] })
+            new CleanWebpackPlugin({ cleanOnceBeforeBuildPatterns: [path.join(outputDir, "wwwroot", "dist")] }),
+            new FilewatcherPlugin({watchFileRegex: ["./Resources/**/*.resx", "./Resources/**/*.cs"]})
         ]
     };
 };
