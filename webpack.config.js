@@ -1,5 +1,6 @@
 const { join } = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = (env) => {
     const isDevBuild = !(env && env.prod);
@@ -11,7 +12,7 @@ module.exports = (env) => {
     return {
         mode: isDevBuild ? "development" : "production",
 
-        devtool: "source-map",
+        devtool: isDevBuild ? "inline-source-map" : false,
 
         target: "web",
 
@@ -32,10 +33,10 @@ module.exports = (env) => {
             filename: "dist/[name].js",
             publicPath: "/",
             path: join(outputDir, "wwwroot"),
-            libraryTarget: 'umd',
-            library: '[name]',
+            libraryTarget: "umd",
+            library: "[name]",
             umdNamedDefine: true,
-            globalObject: 'window',
+            globalObject: "window",
             pathinfo: false
         },
 
@@ -47,20 +48,20 @@ module.exports = (env) => {
         module: {
             rules: [
                 {
-                    test: require.resolve('jquery'),
+                    test: require.resolve("jquery"),
                     use: [
                         {
-                            loader: 'expose-loader',
-                            options: '$'
+                            loader: "expose-loader",
+                            options: "$"
                         }
                     ]
                 },
                 {
-                    test: require.resolve('knockout'),
+                    test: require.resolve("knockout"),
                     use: [
                         {
-                            loader: 'expose-loader',
-                            options: 'ko'
+                            loader: "expose-loader",
+                            options: "ko"
                         }
                     ]
                 },
@@ -85,14 +86,26 @@ module.exports = (env) => {
             ]
         },
         optimization: {
-            runtimeChunk: 'single',
+            runtimeChunk: "single",
+            minimizer: [
+                new TerserPlugin(
+                    {
+                        chunkFilter: (chunk) => {
+                            if (chunk.name === "vendor") {
+                                return false;
+                            }
+                            return true;
+                        }
+                    }
+                )
+            ],
             splitChunks: {
-                chunks: 'all',
+                chunks: "all",
                 maxInitialRequests: Infinity,
                 minSize: 0,
                 cacheGroups: {
                     default: {
-                        name: 'common',
+                        name: "common",
                         minChunks: 2,
                         priority: -20,
                         reuseExistingChunk: true
@@ -101,7 +114,7 @@ module.exports = (env) => {
                         test: /[\\/]node_modules[\\/]/,
                         name(module) {
                             const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-                            return `vendor.${packageName.replace('@', '')}`;
+                            return `vendor.${packageName.replace("@", "")}`;
                         }
                     }
                 }
