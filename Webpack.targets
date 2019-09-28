@@ -7,7 +7,6 @@
 
     <Yarn Command="install" />
     <Yarn Command="run eslint --config ClientApp/.eslintrc.js ClientApp/**" />
-    <Yarn Command="run webpack --config webpack.config.js" />
   </Target>
 
   <Target Name="PublishWebpack"

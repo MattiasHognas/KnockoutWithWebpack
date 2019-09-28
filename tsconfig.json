@@ -1,14 +1,26 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
+        "strict": true,
         "allowSyntheticDefaultImports": true,
         "sourceMap": false,
         "module": "es6",
         "target": "es6",
         "noImplicitAny": true,
         "outDir": "wwwroot/dist",
+        "baseUrl": "ClientApp",
         "moduleResolution": "node",
         "incremental": true,
         "experimentalDecorators": true
-    }
+    },
+    "include": [
+        "ClientApp/**/*"
+    ],
+    "exclude": [
+        "bin",
+        "obj",
+        "wwwroot",
+        "node_modules",
+        "**/*.spec.ts"
+    ]
 }

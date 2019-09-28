@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+    <Content Update="tsconfig*.json" CopyToPublishDirectory="Never" />
   </ItemGroup>
 
   <Import Project="Webpack.targets" />
