@@ -1,0 +1,1 @@
+require("./../Resources/TestResource.resx");

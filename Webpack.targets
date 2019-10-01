@@ -6,8 +6,7 @@
           Outputs="node_modules/.yarn-integrity">
 
     <Yarn Command="install" />
-    <Yarn Command="run eslint --config ClientApp/.eslintrc.js ClientApp/**" />
-    <Yarn Command="run webpack --config webpack.config.js" />
+    <Yarn Command="run eslint --config ClientApp/.eslintrc.js ClientApp/**/*.ts" />
   </Target>
 
   <Target Name="PublishWebpack"
