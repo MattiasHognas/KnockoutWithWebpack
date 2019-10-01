@@ -1,8 +1,8 @@
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
-const FilewatcherPlugin = require("filewatcher-webpack-plugin");
-const ForkTsCheckerNotifierWebpackPlugin = require("fork-ts-checker-notifier-webpack-plugin");
+//const FilewatcherPlugin = require("filewatcher-webpack-plugin");
+//const ForkTsCheckerNotifierWebpackPlugin = require("fork-ts-checker-notifier-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const HappyPack = require("happypack");
@@ -12,7 +12,7 @@ const happyThreadPool = HappyPack.ThreadPool({ size: 7 });
 module.exports = (env) => {
     const isDevBuild = !(env && env.prod);
 
-    const isWatching = !(env && env.watch);
+    const isWatching = (env && env.watch);
 
     console.log("isWatching", isWatching);
 
@@ -33,7 +33,8 @@ module.exports = (env) => {
 
         entry: {
             "TestA": "./ClientApp/TestA.ts",
-            "TestB": "./ClientApp/TestB.ts"
+            "TestB": "./ClientApp/TestB.ts",
+            "Resx": "./ClientApp/Resx.ts"
         },
 
         watchOptions: {
@@ -71,9 +72,10 @@ module.exports = (env) => {
                         {
                             loader: path.resolve("./chinsay-resx2ts-loader.js"),
                             options: {
-                                typeScriptResourcesNamespace: "test",
-                                virtualResxFolder: "./Resources",
-                                virtualTypeScriptFolder: "./ClientApp/Resources"
+                                typeScriptResourcesNamespace: "resources",
+                                virtualResxFolder: path.join(outputDir, "Resources"),
+                                virtualTypeScriptFolder: path.join(outputDir, "/ClientApp/Resources"),
+                                virtualJsonFolder: path.join(outputDir, "/ClientApp/Resources"),
                             }
                         }
                     ]
@@ -164,18 +166,7 @@ module.exports = (env) => {
             //         excludeWarnings: false
             //     }
             // )
-        ].concat(
-            isWatching
-                ? new FilewatcherPlugin(
-                    {
-                        watchFileRegex: [
-                            "./Resources/**/*.resx",
-                            "./Resources/**/*.cs"
-                        ]
-                    }
-                )
-                : []
-        ),
+        ],
         optimization: {
             runtimeChunk: "single",
             minimizer: [

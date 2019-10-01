@@ -11,7 +11,8 @@
         "baseUrl": "ClientApp",
         "moduleResolution": "node",
         "incremental": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "resolveJsonModule": true
     },
     "include": [
         "ClientApp/**/*"
