@@ -25,6 +25,7 @@ namespace Lab
                     ConfigFile = "webpack.config.js"
                 });
                 */
+                app.UseProxyToSpaDevelopmentServer("https//localhost:5001");
             }
 
             app.UseHttpsRedirection();
@@ -35,7 +36,7 @@ namespace Lab
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}");
-
+                /*
                 if (env.IsDevelopment())
                 {
                     // This forwards everything to the "vue-cli-service":
@@ -45,11 +46,12 @@ namespace Lab
                         npmScript: "serve",
                         regex: "Compiled successfully");
                 }
+                */
             });
 
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = "./";
             });
         }
     }
