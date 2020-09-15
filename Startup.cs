@@ -18,11 +18,13 @@ namespace Lab
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                /*
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
                     HotModuleReplacement = false,
                     ConfigFile = "webpack.config.js"
                 });
+                */
             }
 
             app.UseHttpsRedirection();
@@ -33,6 +35,21 @@ namespace Lab
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}");
+
+                if (env.IsDevelopment())
+                {
+                    // This forwards everything to the "vue-cli-service":
+                    endpoints.MapToVueCliProxy(
+                        "{*path}",
+                        new SpaOptions { SourcePath = "ClientApp" },
+                        npmScript: "serve",
+                        regex: "Compiled successfully");
+                }
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
             });
         }
     }
