@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder.SpaApplicationBuilderExtensions;
+using Microsoft.AspNetCore.Builder.SpaProxyingExtensions;
 
 namespace Lab
 {
